@@ -41,20 +41,33 @@ function get_data_from_api(){
     var date_to = $('.datepicker_to').val();
     var date_from = $('.datepicker_from').val();
 
-    var data = {
-        'date_to' : date_to,
-        'date_from' : date_from,
-    };
-    $.ajax({
-        method: 'POST',
-        url: api_url,
-        data: data,
-        dataType: 'json',
-        success: function(result) {
-            plotting_the_chart(result);
-        },
+    var compare_to_date = new Date(date_to);
+    var compare_from_date = new Date(date_from);
 
-    });
+    if (compare_from_date < compare_to_date){
+        var data = {
+            'date_to' : date_to,
+            'date_from' : date_from,
+        };
+        $.ajax({
+            method: 'POST',
+            url: api_url,
+            data: data,
+            dataType: 'json',
+            success: function(result) {
+                plotting_the_chart(result);
+            },
+
+        });
+    }
+    else{
+        Swal.fire(
+            'Error!',
+            'There is problem in selected dates. Please check and try again',
+            'error'
+        )
+    }
+
 }
 
 //render the chart
